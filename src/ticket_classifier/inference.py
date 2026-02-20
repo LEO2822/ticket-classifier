@@ -1,47 +1,37 @@
-"""Load the fine-tuned model and classify customer support tickets."""
+"""Load the GGUF model via llama-cpp-python and classify customer support tickets."""
 
 import json
-import os
 import sys
+
+from llama_cpp import Llama
+
+from .config import GGUF_MODEL, SYSTEM_PROMPT
 from .utils import strip_think_tags
 
-os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
-
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-from .config import MERGED_DIR, SYSTEM_PROMPT
-
-
-# Cached model/tokenizer
-_model = None
-_tokenizer = None
-_device = None
+_llm = None
 
 
 def load_model():
-    """Load the merged fine-tuned model (cached after first call)."""
-    global _model, _tokenizer, _device
+    """Load the GGUF model (cached after first call)."""
+    global _llm
 
-    if _model is not None:
-        return _model, _tokenizer, _device
+    if _llm is not None:
+        return _llm
 
-    _device = "mps" if torch.backends.mps.is_available() else "cpu"
+    if not GGUF_MODEL.exists():
+        print(f"ERROR: GGUF model not found at {GGUF_MODEL}")
+        print("Run the GGUF conversion first.")
+        sys.exit(1)
 
-    print(f"Loading model from {MERGED_DIR}...")
-    _tokenizer = AutoTokenizer.from_pretrained(str(MERGED_DIR), trust_remote_code=True)
-    _model = AutoModelForCausalLM.from_pretrained(
-        str(MERGED_DIR),
-        dtype=torch.float32,
-        trust_remote_code=True,
-    ).to(_device)
-    _model.eval()  # noqa: torch inference mode, not python eval()
-
-    if _tokenizer.pad_token is None:
-        _tokenizer.pad_token = _tokenizer.eos_token
-
-    print(f"Model loaded on {_device}")
-    return _model, _tokenizer, _device
+    print(f"Loading GGUF model from {GGUF_MODEL}...")
+    _llm = Llama(
+        model_path=str(GGUF_MODEL),
+        n_ctx=40960,
+        n_gpu_layers=-1,
+        verbose=False,
+    )
+    print("Model loaded.")
+    return _llm
 
 
 def classify(ticket_text: str, intents: list[str] | None = None) -> dict:
@@ -54,36 +44,25 @@ def classify(ticket_text: str, intents: list[str] | None = None) -> dict:
     Returns:
         Dict with keys: intent, confidence, reason
     """
-    model, tokenizer, device = load_model()
+    llm = load_model()
 
     intents_str = ", ".join(sorted(intents)) if intents else "all trained intents"
     system_msg = SYSTEM_PROMPT.format(intents=intents_str)
 
-    messages = [
-        {"role": "system", "content": system_msg},
-        {"role": "user", "content": ticket_text},
-    ]
-
-    text = tokenizer.apply_chat_template(
-        messages, tokenize=False, add_generation_prompt=True
+    response = llm.create_chat_completion(
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": ticket_text},
+        ],
+        max_tokens=128,
+        temperature=0.0,
     )
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=448).to(device)
 
-    with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=128,
-            do_sample=False,
-            pad_token_id=tokenizer.pad_token_id,
-        )
-
-    generated = outputs[0][inputs["input_ids"].shape[1]:]
-    raw_output = tokenizer.decode(generated, skip_special_tokens=True).strip()
+    raw_output = response["choices"][0]["message"]["content"].strip()
     raw_output = strip_think_tags(raw_output)
 
     try:
-        result = json.loads(raw_output)
-        return result
+        return json.loads(raw_output)
     except json.JSONDecodeError:
         return {"raw_output": raw_output, "error": "Failed to parse JSON"}
 

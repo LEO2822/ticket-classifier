@@ -8,6 +8,7 @@ MODELS_DIR = PROJECT_ROOT / "models"
 ADAPTER_DIR = MODELS_DIR / "adapter"
 MERGED_DIR = MODELS_DIR / "merged"
 GGUF_DIR = MODELS_DIR / "gguf"
+GGUF_MODEL = GGUF_DIR / "ticket-router-f16.gguf"
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 LOGS_DIR = OUTPUTS_DIR / "logs"
 

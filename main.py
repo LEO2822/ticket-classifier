@@ -1,6 +1,8 @@
-def main():
-    print("Hello from ticket-classifier!")
+import json
 
+from src.ticket_classifier.inference import classify
 
-if __name__ == "__main__":
-    main()
+ticket = "I want to cancel my credit card"
+
+result = classify(ticket)
+print(json.dumps(result, indent=2))
