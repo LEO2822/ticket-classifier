@@ -14,3 +14,8 @@ wheels/
 06-hf-model-trainer-skill.ipynb
 
 .env
+
+# Models & outputs (large files, not for git)
+models/
+outputs/
+llama.cpp/
