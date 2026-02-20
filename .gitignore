@@ -12,3 +12,5 @@ wheels/
 .agents/
 .claude/
 06-hf-model-trainer-skill.ipynb
+
+.env
