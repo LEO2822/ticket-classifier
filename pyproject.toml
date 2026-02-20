@@ -13,3 +13,9 @@ dependencies = [
     "transformers>=5.2.0",
     "trl>=0.28.0",
 ]
+
+[dependency-groups]
+dev = [
+    "gguf>=0.17.1",
+    "sentencepiece>=0.2.1",
+]
