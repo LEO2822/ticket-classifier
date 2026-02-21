@@ -19,7 +19,9 @@ def merge_and_save():
     )
 
     # Find the latest checkpoint directory inside ADAPTER_DIR
-    checkpoints = sorted(ADAPTER_DIR.glob("checkpoint-*"), key=lambda p: int(p.name.split("-")[-1]))
+    checkpoints = sorted(
+        ADAPTER_DIR.glob("checkpoint-*"), key=lambda p: int(p.name.split("-")[-1])
+    )
     if not checkpoints:
         raise FileNotFoundError(f"No checkpoint-* directories found in {ADAPTER_DIR}")
     adapter_path = checkpoints[-1]

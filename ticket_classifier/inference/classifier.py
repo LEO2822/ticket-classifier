@@ -96,7 +96,10 @@ class TicketClassifier:
             raw_output = response["choices"][0]["message"]["content"].strip()
         except (KeyError, IndexError, TypeError) as exc:
             logger.error("Unexpected model response structure: %s", exc)
-            return {"raw_output": str(response), "error": "Unexpected response structure"}
+            return {
+                "raw_output": str(response),
+                "error": "Unexpected response structure",
+            }
 
         raw_output = strip_think_tags(raw_output)
 
@@ -115,16 +118,16 @@ class TicketClassifier:
 _default_classifier = TicketClassifier()
 
 
-def classify(
-    ticket_text: str, intents: list[str] | None = None
-) -> dict[str, Any]:
+def classify(ticket_text: str, intents: list[str] | None = None) -> dict[str, Any]:
     """Module-level convenience wrapper around :class:`TicketClassifier`."""
     return _default_classifier.classify(ticket_text, intents=intents)
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: uv run -m ticket_classifier.inference.classifier 'your ticket text'")
+        print(
+            "Usage: uv run -m ticket_classifier.inference.classifier 'your ticket text'"
+        )
         sys.exit(1)
 
     ticket = " ".join(sys.argv[1:])

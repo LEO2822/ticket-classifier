@@ -19,8 +19,13 @@ def ensure_llama_cpp():
 
     logger.info("Cloning llama.cpp (needed for GGUF conversion)...")
     subprocess.run(
-        ["git", "clone", "--depth=1", "https://github.com/ggml-org/llama.cpp.git",
-         str(LLAMA_CPP_DIR)],
+        [
+            "git",
+            "clone",
+            "--depth=1",
+            "https://github.com/ggml-org/llama.cpp.git",
+            str(LLAMA_CPP_DIR),
+        ],
         check=True,
     )
     # gguf and sentencepiece are managed as dev deps in pyproject.toml;
@@ -32,7 +37,9 @@ def convert_to_gguf():
     ensure_llama_cpp()
 
     if not MERGED_DIR.exists() or not any(MERGED_DIR.iterdir()):
-        raise FileNotFoundError(f"No merged model found at {MERGED_DIR}. Run merge first.")
+        raise FileNotFoundError(
+            f"No merged model found at {MERGED_DIR}. Run merge first."
+        )
 
     GGUF_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -42,10 +49,15 @@ def convert_to_gguf():
 
     logger.info("Converting %s to GGUF (f16)...", MERGED_DIR)
     subprocess.run(
-        [sys.executable, str(convert_script),
-         str(MERGED_DIR),
-         "--outfile", str(GGUF_OUTPUT),
-         "--outtype", "f16"],
+        [
+            sys.executable,
+            str(convert_script),
+            str(MERGED_DIR),
+            "--outfile",
+            str(GGUF_OUTPUT),
+            "--outtype",
+            "f16",
+        ],
         check=True,
     )
 

@@ -10,22 +10,17 @@ Metrics:
 import json
 import re
 
-from ticket_classifier.config import configure_mps_environment
-
-# MPS memory management - must be called before importing torch
-configure_mps_environment()
-
 import torch
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from ticket_classifier.config import (
-    MERGED_DIR,
     ADAPTER_DIR,
     BASE_MODEL,
-    OUTPUTS_DIR,
     EVAL_MAX_INPUT_LENGTH,
     INFERENCE_MAX_TOKENS,
+    MERGED_DIR,
+    OUTPUTS_DIR,
     get_device,
     get_logger,
 )
@@ -37,7 +32,9 @@ logger = get_logger(__name__)
 REQUIRED_SCHEMA_KEYS = {"intent", "confidence", "reason"}
 
 
-def load_model(use_merged: bool = True) -> tuple[AutoModelForCausalLM, AutoTokenizer, str]:
+def load_model(
+    use_merged: bool = True,
+) -> tuple[AutoModelForCausalLM, AutoTokenizer, str]:
     """Load the fine-tuned model (merged or adapter)."""
     device = get_device()
     logger.info("Using device: %s", device)
@@ -49,10 +46,13 @@ def load_model(use_merged: bool = True) -> tuple[AutoModelForCausalLM, AutoToken
             dtype=torch.float32,
             trust_remote_code=True,
         ).to(device)
-        tokenizer = AutoTokenizer.from_pretrained(str(MERGED_DIR), trust_remote_code=True)
+        tokenizer = AutoTokenizer.from_pretrained(
+            str(MERGED_DIR), trust_remote_code=True
+        )
     else:
         logger.info("Loading base model + LoRA adapter...")
         from peft import PeftModel
+
         model = AutoModelForCausalLM.from_pretrained(
             BASE_MODEL,
             dtype=torch.float32,
@@ -97,7 +97,9 @@ def generate_prediction(model, tokenizer, messages: list[dict], device: str) -> 
         add_generation_prompt=True,
     )
 
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=EVAL_MAX_INPUT_LENGTH).to(device)
+    inputs = tokenizer(
+        text, return_tensors="pt", truncation=True, max_length=EVAL_MAX_INPUT_LENGTH
+    ).to(device)
 
     with torch.no_grad():
         outputs = model.generate(
@@ -109,7 +111,7 @@ def generate_prediction(model, tokenizer, messages: list[dict], device: str) -> 
         )
 
     # Decode only the new tokens
-    generated = outputs[0][inputs["input_ids"].shape[1]:]
+    generated = outputs[0][inputs["input_ids"].shape[1] :]
     raw = tokenizer.decode(generated, skip_special_tokens=True).strip()
     return strip_think_tags(raw)
 
@@ -171,15 +173,17 @@ def run_evaluation(max_samples: int | None = None):
                 if parsed["intent"] == gt_intent:
                     correct_on_schema += 1
 
-        results.append({
-            "index": i,
-            "ground_truth": gt_intent,
-            "prediction": prediction,
-            "pred_intent": pred_intent,
-            "valid_json": is_valid_json,
-            "schema_valid": is_schema_valid,
-            "correct": pred_intent == gt_intent,
-        })
+        results.append(
+            {
+                "index": i,
+                "ground_truth": gt_intent,
+                "prediction": prediction,
+                "pred_intent": pred_intent,
+                "valid_json": is_valid_json,
+                "schema_valid": is_schema_valid,
+                "correct": pred_intent == gt_intent,
+            }
+        )
 
     # Compute final metrics
     metrics = {
@@ -187,7 +191,9 @@ def run_evaluation(max_samples: int | None = None):
         "accuracy": round(correct_any / total, 4) if total else 0,
         "valid_json_rate": round(valid_json / total, 4) if total else 0,
         "schema_pass_rate": round(schema_pass / total, 4) if total else 0,
-        "accuracy_on_schema": round(correct_on_schema / schema_pass, 4) if schema_pass else 0,
+        "accuracy_on_schema": round(correct_on_schema / schema_pass, 4)
+        if schema_pass
+        else 0,
     }
 
     # Log results
@@ -214,5 +220,6 @@ def run_evaluation(max_samples: int | None = None):
 
 if __name__ == "__main__":
     import sys
+
     max_samples = int(sys.argv[1]) if len(sys.argv) > 1 else None
     run_evaluation(max_samples=max_samples)

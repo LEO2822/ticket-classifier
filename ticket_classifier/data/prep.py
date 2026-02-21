@@ -55,8 +55,17 @@ def compute_confidence(instruction: str, intent: str) -> float:
         conf -= CONFIDENCE_SHORT_TEXT_PENALTY
 
     # Hedging / uncertainty language
-    hedging = ["maybe", "i think", "possibly", "not sure", "might", "perhaps",
-               "i guess", "kind of", "sort of"]
+    hedging = [
+        "maybe",
+        "i think",
+        "possibly",
+        "not sure",
+        "might",
+        "perhaps",
+        "i guess",
+        "kind of",
+        "sort of",
+    ]
     if any(h in text for h in hedging):
         conf -= CONFIDENCE_HEDGING_PENALTY
 
@@ -130,8 +139,11 @@ def load_and_prepare_dataset() -> tuple[DatasetDict, list[str]]:
     )
 
     # Train/eval split
-    logger.info("Splitting into train (%.0f%%) / eval (%.0f%%)...",
-                (1 - TEST_SIZE) * 100, TEST_SIZE * 100)
+    logger.info(
+        "Splitting into train (%.0f%%) / eval (%.0f%%)...",
+        (1 - TEST_SIZE) * 100,
+        TEST_SIZE * 100,
+    )
     split = ds_formatted.train_test_split(test_size=TEST_SIZE, seed=SEED)
     logger.info("  Train: %d examples", len(split["train"]))
     logger.info("  Eval:  %d examples", len(split["test"]))

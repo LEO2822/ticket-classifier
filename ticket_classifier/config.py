@@ -104,6 +104,10 @@ def configure_mps_environment() -> None:
     os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
 
 
+# Eagerly configure MPS so any module importing config before torch is safe.
+configure_mps_environment()
+
+
 def get_device() -> str:
     """Detect best available compute device (MPS > CUDA > CPU)."""
     import torch

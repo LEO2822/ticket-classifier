@@ -1,32 +1,27 @@
 """Local SFT training on Apple MPS (M-series GPU)."""
 
-from ticket_classifier.config import configure_mps_environment
-
-# MPS memory management - must be called before importing torch
-configure_mps_environment()
-
 import torch
 from peft import LoraConfig
-from trl import SFTTrainer, SFTConfig
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from trl import SFTConfig, SFTTrainer
 
 from ticket_classifier.config import (
-    BASE_MODEL,
     ADAPTER_DIR,
-    LOGS_DIR,
-    MAX_SEQ_LENGTH,
-    MAX_STEPS,
-    LEARNING_RATE,
-    WARMUP_RATIO,
-    PER_DEVICE_TRAIN_BATCH_SIZE,
-    GRADIENT_ACCUMULATION_STEPS,
+    BASE_MODEL,
     EVAL_STEPS,
-    SAVE_STEPS,
+    GRADIENT_ACCUMULATION_STEPS,
+    LEARNING_RATE,
     LOGGING_STEPS,
-    LORA_R,
+    LOGS_DIR,
     LORA_ALPHA,
     LORA_DROPOUT,
+    LORA_R,
     LORA_TARGET_MODULES,
+    MAX_SEQ_LENGTH,
+    MAX_STEPS,
+    PER_DEVICE_TRAIN_BATCH_SIZE,
+    SAVE_STEPS,
+    WARMUP_RATIO,
     get_device,
     get_logger,
 )
@@ -111,7 +106,12 @@ def train() -> SFTTrainer:
     # Log trainable params
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     total = sum(p.numel() for p in model.parameters())
-    logger.info("Trainable parameters: %s / %s (%.2f%%)", f"{trainable:,}", f"{total:,}", 100 * trainable / total)
+    logger.info(
+        "Trainable parameters: %s / %s (%.2f%%)",
+        f"{trainable:,}",
+        f"{total:,}",
+        100 * trainable / total,
+    )
 
     logger.info("Starting training...")
     train_result = trainer.train()
