@@ -1,6 +1,6 @@
 import json
 
-from src.ticket_classifier.inference import classify
+from ticket_classifier import classify
 
 ticket = "I want to cancel my credit card"
 
