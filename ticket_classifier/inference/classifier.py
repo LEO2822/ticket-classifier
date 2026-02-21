@@ -5,9 +5,10 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from llama_cpp import Llama
+from llama_cpp.llama_types import CreateChatCompletionResponse
 
 from ticket_classifier.config import (
     GGUF_MODEL,
@@ -83,18 +84,25 @@ class TicketClassifier:
         intents_str = ", ".join(sorted(intents)) if intents else "all trained intents"
         system_msg = SYSTEM_PROMPT.format(intents=intents_str)
 
-        response = llm.create_chat_completion(
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": ticket_text},
-            ],
-            max_tokens=INFERENCE_MAX_TOKENS,
-            temperature=0.0,
+        response = cast(
+            CreateChatCompletionResponse,
+            llm.create_chat_completion(
+                messages=[
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": ticket_text},
+                ],
+                max_tokens=INFERENCE_MAX_TOKENS,
+                temperature=0.0,
+                stream=False,
+            ),
         )
 
         try:
-            raw_output = response["choices"][0]["message"]["content"].strip()
-        except (KeyError, IndexError, TypeError) as exc:
+            content = response["choices"][0]["message"]["content"]
+            if content is None:
+                raise ValueError("Model returned empty content")
+            raw_output = content.strip()
+        except (KeyError, IndexError, TypeError, ValueError) as exc:
             logger.error("Unexpected model response structure: %s", exc)
             return {
                 "raw_output": str(response),
