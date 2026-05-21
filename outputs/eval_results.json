@@ -1,0 +1,461 @@
+{
+  "metrics": {
+    "total_samples": 50,
+    "accuracy": 1.0,
+    "valid_json_rate": 1.0,
+    "schema_pass_rate": 1.0,
+    "accuracy_on_schema": 1.0
+  },
+  "samples": [
+    {
+      "index": 0,
+      "ground_truth": "recover_swallowed_card",
+      "prediction": "{\"intent\": \"recover_swallowed_card\", \"confidence\": 0.94, \"reason\": \"Customer request relates to recover swallowed card based on: I want to recover a swallowed card by an ATM, will you help me?\"}",
+      "pred_intent": "recover_swallowed_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 1,
+      "ground_truth": "check_mortgage_payments",
+      "prediction": "{\"intent\": \"check_mortgage_payments\", \"confidence\": 0.96, \"reason\": \"Customer request relates to check mortgage payments based on: need to see the mortgage payments how could i do it\"}",
+      "pred_intent": "check_mortgage_payments",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 2,
+      "ground_truth": "activate_card_international_usage",
+      "prediction": "{\"intent\": \"activate_card_international_usage\", \"confidence\": 0.94, \"reason\": \"Customer request relates to activate card international usage based on: I am travelling overseas, can you help me to activate a Visa...\"}",
+      "pred_intent": "activate_card_international_usage",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 3,
+      "ground_truth": "get_password",
+      "prediction": "{\"intent\": \"get_password\", \"confidence\": 0.94, \"reason\": \"Customer request relates to get password based on: I don't have a password, will you help me to get it?\"}",
+      "pred_intent": "get_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 4,
+      "ground_truth": "check_card_annual_fee",
+      "prediction": "{\"intent\": \"check_card_annual_fee\", \"confidence\": 0.96, \"reason\": \"Customer request relates to check card annual fee based on: i got to see the card annual fee how coulpd i do it\"}",
+      "pred_intent": "check_card_annual_fee",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 5,
+      "ground_truth": "make_transfer",
+      "prediction": "{\"intent\": \"make_transfer\", \"confidence\": 0.94, \"reason\": \"Customer request relates to make transfer based on: I want to pay the rent, how do I make a transfer to...\"}",
+      "pred_intent": "make_transfer",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 6,
+      "ground_truth": "make_transfer",
+      "prediction": "{\"intent\": \"make_transfer\", \"confidence\": 0.96, \"reason\": \"Customer request relates to make transfer based on: need to pay to a friend help me making a transfer ot...\"}",
+      "pred_intent": "make_transfer",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 7,
+      "ground_truth": "get_password",
+      "prediction": "{\"intent\": \"get_password\", \"confidence\": 0.96, \"reason\": \"Customer request relates to get password based on: i dont ahve a password can ya get it\"}",
+      "pred_intent": "get_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 8,
+      "ground_truth": "set_up_password",
+      "prediction": "{\"intent\": \"set_up_password\", \"confidence\": 0.91, \"reason\": \"Customer request relates to set up password based on: I'm looking for a password, how could I find it ?\"}",
+      "pred_intent": "set_up_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 9,
+      "ground_truth": "cancel_card",
+      "prediction": "{\"intent\": \"cancel_card\", \"confidence\": 0.94, \"reason\": \"Customer request relates to cancel card based on: I need to cancel a credit card online, how do I do it?\"}",
+      "pred_intent": "cancel_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 10,
+      "ground_truth": "create_account",
+      "prediction": "{\"intent\": \"create_account\", \"confidence\": 0.91, \"reason\": \"Customer request relates to create account based on: I do not have a fucking account, could you help me to open it?\"}",
+      "pred_intent": "create_account",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 11,
+      "ground_truth": "activate_card",
+      "prediction": "{\"intent\": \"activate_card\", \"confidence\": 0.96, \"reason\": \"Customer request relates to activate card based on: wanna activate a credit card  online can ya help me\"}",
+      "pred_intent": "activate_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 12,
+      "ground_truth": "check_current_balance_on_card",
+      "prediction": "{\"intent\": \"check_current_balance_on_card\", \"confidence\": 0.97, \"reason\": \"Customer request relates to check current balance on card based on: I am looking for information about the current balance on my credit...\"}",
+      "pred_intent": "check_current_balance_on_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 13,
+      "ground_truth": "set_up_password",
+      "prediction": "{\"intent\": \"set_up_password\", \"confidence\": 0.94, \"reason\": \"Customer request relates to set up password based on: I need to set up a passwordd, how do I do it?\"}",
+      "pred_intent": "set_up_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 14,
+      "ground_truth": "check_current_balance_on_card",
+      "prediction": "{\"intent\": \"check_current_balance_on_card\", \"confidence\": 0.99, \"reason\": \"Customer request relates to check current balance on card based on: wanna know about the current balance on my credit card how c...\"}",
+      "pred_intent": "check_current_balance_on_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 15,
+      "ground_truth": "make_transfer",
+      "prediction": "{\"intent\": \"make_transfer\", \"confidence\": 0.93, \"reason\": \"Customer request relates to make transfer based on: need to pay to a friend where to perform a bank transfer\"}",
+      "pred_intent": "make_transfer",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 16,
+      "ground_truth": "block_card",
+      "prediction": "{\"intent\": \"block_card\", \"confidence\": 0.93, \"reason\": \"Customer request relates to block card based on: i cant find my crdit card how do i lock it\"}",
+      "pred_intent": "block_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 17,
+      "ground_truth": "check_recent_transactions",
+      "prediction": "{\"intent\": \"check_recent_transactions\", \"confidence\": 0.91, \"reason\": \"Customer request relates to check recent transactions based on: I'd like to know about the fucking current balance of my bank acc...\"}",
+      "pred_intent": "check_recent_transactions",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 18,
+      "ground_truth": "block_card",
+      "prediction": "{\"intent\": \"block_card\", \"confidence\": 0.93, \"reason\": \"Customer request relates to block card based on: i cantfind my amex will ya help me block it\"}",
+      "pred_intent": "block_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 19,
+      "ground_truth": "close_account",
+      "prediction": "{\"intent\": \"close_account\", \"confidence\": 0.91, \"reason\": \"Customer request relates to close account based on: could you help me to close an omline account?\"}",
+      "pred_intent": "close_account",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 20,
+      "ground_truth": "check_card_annual_fee",
+      "prediction": "{\"intent\": \"check_card_annual_fee\", \"confidence\": 0.96, \"reason\": \"Customer request relates to check card annual fee based on: I'd like to know about the credit card annual fee where can i...\"}",
+      "pred_intent": "check_card_annual_fee",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 21,
+      "ground_truth": "make_transfer",
+      "prediction": "{\"intent\": \"make_transfer\", \"confidence\": 0.96, \"reason\": \"Customer request relates to make transfer based on: I want to send money to someone, I have to make a transfer...\"}",
+      "pred_intent": "make_transfer",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 22,
+      "ground_truth": "activate_card",
+      "prediction": "{\"intent\": \"activate_card\", \"confidence\": 0.93, \"reason\": \"Customer request relates to activate card based on: id like to azctivate an amex online i need assistance\"}",
+      "pred_intent": "activate_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 23,
+      "ground_truth": "check_recent_transactions",
+      "prediction": "{\"intent\": \"check_recent_transactions\", \"confidence\": 0.91, \"reason\": \"Customer request relates to check recent transactions based on: I want to check the fucking bank statemnet, could I get s...\"}",
+      "pred_intent": "check_recent_transactions",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 24,
+      "ground_truth": "get_password",
+      "prediction": "{\"intent\": \"get_password\", \"confidence\": 0.96, \"reason\": \"Customer request relates to get password based on: i dont have a password will ya help me to get it\"}",
+      "pred_intent": "get_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 25,
+      "ground_truth": "cancel_card",
+      "prediction": "{\"intent\": \"cancel_card\", \"confidence\": 0.94, \"reason\": \"Customer request relates to cancel card based on: I'd like to cancel a card online, how could I do it?\"}",
+      "pred_intent": "cancel_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 26,
+      "ground_truth": "human_agent",
+      "prediction": "{\"intent\": \"human_agent\", \"confidence\": 0.91, \"reason\": \"Customer request relates to human agent based on: I do not understand you, how do I talk to a fucking agent?\"}",
+      "pred_intent": "human_agent",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 27,
+      "ground_truth": "get_password",
+      "prediction": "{\"intent\": \"get_password\", \"confidence\": 0.96, \"reason\": \"Customer request relates to get password based on: i dont have a password could i get it\"}",
+      "pred_intent": "get_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 28,
+      "ground_truth": "recover_swallowed_card",
+      "prediction": "{\"intent\": \"recover_swallowed_card\", \"confidence\": 0.88, \"reason\": \"Customer request relates to recover swallowed card based on: I need to retrieve a Visa by an ATM, where can I do it?\"}",
+      "pred_intent": "recover_swallowed_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 29,
+      "ground_truth": "find_ATM",
+      "prediction": "{\"intent\": \"find_ATM\", \"confidence\": 0.93, \"reason\": \"Customer request relates to find ATM based on: I have to find an ATM in my area\"}",
+      "pred_intent": "find_ATM",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 30,
+      "ground_truth": "find_branch",
+      "prediction": "{\"intent\": \"find_branch\", \"confidence\": 0.93, \"reason\": \"Customer request relates to find branch based on: i got to search foe the closest branch i need help\"}",
+      "pred_intent": "find_branch",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 31,
+      "ground_truth": "cancel_card",
+      "prediction": "{\"intent\": \"cancel_card\", \"confidence\": 0.96, \"reason\": \"Customer request relates to cancel card based on: id like to cancel a card help me\"}",
+      "pred_intent": "cancel_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 32,
+      "ground_truth": "dispute_ATM_withdrawal",
+      "prediction": "{\"intent\": \"dispute_ATM_withdrawal\", \"confidence\": 0.93, \"reason\": \"Customer request relates to dispute ATM withdrawal based on: I want help to dispute an ATM transaction\"}",
+      "pred_intent": "dispute_ATM_withdrawal",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 33,
+      "ground_truth": "apply_for_loan",
+      "prediction": "{\"intent\": \"apply_for_loan\", \"confidence\": 0.93, \"reason\": \"Customer request relates to apply for loan based on: i got to take out a loan were do i do it\"}",
+      "pred_intent": "apply_for_loan",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 34,
+      "ground_truth": "human_agent",
+      "prediction": "{\"intent\": \"human_agent\", \"confidence\": 0.88, \"reason\": \"Customer request relates to human agent based on: I don't understand you, could I speak with someone?\"}",
+      "pred_intent": "human_agent",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 35,
+      "ground_truth": "check_recent_transactions",
+      "prediction": "{\"intent\": \"check_recent_transactions\", \"confidence\": 0.93, \"reason\": \"Customer request relates to check recent transactions based on: im looking for information about my fucking recent transaction deta...\"}",
+      "pred_intent": "check_recent_transactions",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 36,
+      "ground_truth": "make_transfer",
+      "prediction": "{\"intent\": \"make_transfer\", \"confidence\": 0.96, \"reason\": \"Customer request relates to make transfer based on: i ogt to make a transfer how do i do it\"}",
+      "pred_intent": "make_transfer",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 37,
+      "ground_truth": "human_agent",
+      "prediction": "{\"intent\": \"human_agent\", \"confidence\": 0.96, \"reason\": \"Customer request relates to human agent based on: I got to speak with a human agent, I need help\"}",
+      "pred_intent": "human_agent",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 38,
+      "ground_truth": "set_up_password",
+      "prediction": "{\"intent\": \"set_up_password\", \"confidence\": 0.93, \"reason\": \"Customer request relates to set up password based on: wana set up a password how to do it\"}",
+      "pred_intent": "set_up_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 39,
+      "ground_truth": "find_ATM",
+      "prediction": "{\"intent\": \"find_ATM\", \"confidence\": 0.93, \"reason\": \"Customer request relates to find ATM based on: find information about an ATM\"}",
+      "pred_intent": "find_ATM",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 40,
+      "ground_truth": "cancel_transfer",
+      "prediction": "{\"intent\": \"cancel_transfer\", \"confidence\": 0.96, \"reason\": \"Customer request relates to cancel transfer based on: ii got to cancel a bank transfer i need help\"}",
+      "pred_intent": "cancel_transfer",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 41,
+      "ground_truth": "check_mortgage_payments",
+      "prediction": "{\"intent\": \"check_mortgage_payments\", \"confidence\": 0.91, \"reason\": \"Customer request relates to check mortgage payments based on: I got to see the  mortgage payment, could I get some help?\"}",
+      "pred_intent": "check_mortgage_payments",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 42,
+      "ground_truth": "find_branch",
+      "prediction": "{\"intent\": \"find_branch\", \"confidence\": 0.94, \"reason\": \"Customer request relates to find branch based on: I have to find the nearest branch, where can I do it ?\"}",
+      "pred_intent": "find_branch",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 43,
+      "ground_truth": "check_current_balance_on_card",
+      "prediction": "{\"intent\": \"check_current_balance_on_card\", \"confidence\": 0.96, \"reason\": \"Customer request relates to check current balance on card based on: I'd like to check the fucking current balance on my credit cards\"}",
+      "pred_intent": "check_current_balance_on_card",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 44,
+      "ground_truth": "check_loan_payments",
+      "prediction": "{\"intent\": \"check_loan_payments\", \"confidence\": 0.96, \"reason\": \"Customer request relates to check loan payments based on: show me the loan payments\"}",
+      "pred_intent": "check_loan_payments",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 45,
+      "ground_truth": "activate_card_international_usage",
+      "prediction": "{\"intent\": \"activate_card_international_usage\", \"confidence\": 0.94, \"reason\": \"Customer request relates to activate card international usage based on: I have to activate an Amex for international usage, where do I do it?\"}",
+      "pred_intent": "activate_card_international_usage",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 46,
+      "ground_truth": "get_password",
+      "prediction": "{\"intent\": \"get_password\", \"confidence\": 0.93, \"reason\": \"Customer request relates to get password based on: i got to get a passord how can i do it\"}",
+      "pred_intent": "get_password",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 47,
+      "ground_truth": "dispute_ATM_withdrawal",
+      "prediction": "{\"intent\": \"dispute_ATM_withdrawal\", \"confidence\": 0.96, \"reason\": \"Customer request relates to dispute ATM withdrawal based on: wanna dispute an atm withdrawa\"}",
+      "pred_intent": "dispute_ATM_withdrawal",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 48,
+      "ground_truth": "apply_for_loan",
+      "prediction": "{\"intent\": \"apply_for_loan\", \"confidence\": 0.93, \"reason\": \"Customer request relates to apply for loan based on: i got to take out a lian could uhelp me\"}",
+      "pred_intent": "apply_for_loan",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    },
+    {
+      "index": 49,
+      "ground_truth": "check_mortgage_payments",
+      "prediction": "{\"intent\": \"check_mortgage_payments\", \"confidence\": 0.94, \"reason\": \"Customer request relates to check mortgage payments based on: I want to check the mortgage payment, can I get som help?\"}",
+      "pred_intent": "check_mortgage_payments",
+      "valid_json": true,
+      "schema_valid": true,
+      "correct": true
+    }
+  ]
+}
