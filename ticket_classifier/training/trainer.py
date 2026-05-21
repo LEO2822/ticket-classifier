@@ -1,64 +1,51 @@
 """Local SFT training on Apple MPS (M-series GPU)."""
 
-import os
-
-# MPS memory management - set before importing torch
-os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
-
 import torch
 from peft import LoraConfig
-from trl import SFTTrainer, SFTConfig
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from trl import SFTConfig, SFTTrainer
 
-from .config import (
-    BASE_MODEL,
+from ticket_classifier.config import (
     ADAPTER_DIR,
-    LOGS_DIR,
-    MAX_SEQ_LENGTH,
-    MAX_STEPS,
-    LEARNING_RATE,
-    WARMUP_RATIO,
-    PER_DEVICE_TRAIN_BATCH_SIZE,
-    GRADIENT_ACCUMULATION_STEPS,
+    BASE_MODEL,
     EVAL_STEPS,
-    SAVE_STEPS,
+    GRADIENT_ACCUMULATION_STEPS,
+    LEARNING_RATE,
     LOGGING_STEPS,
-    LORA_R,
+    LOGS_DIR,
     LORA_ALPHA,
     LORA_DROPOUT,
+    LORA_R,
     LORA_TARGET_MODULES,
+    MAX_SEQ_LENGTH,
+    MAX_STEPS,
+    PER_DEVICE_TRAIN_BATCH_SIZE,
+    SAVE_STEPS,
+    WARMUP_RATIO,
+    get_device,
+    get_logger,
 )
-from .data_prep import load_and_prepare_dataset
+from ticket_classifier.data.prep import load_and_prepare_dataset
+
+logger = get_logger(__name__)
 
 
-def get_device() -> str:
-    """Detect best available device."""
-    if torch.backends.mps.is_available():
-        print("Using Apple MPS (Metal Performance Shaders)")
-        return "mps"
-    elif torch.cuda.is_available():
-        print(f"Using CUDA: {torch.cuda.get_device_name(0)}")
-        return "cuda"
-    else:
-        print("WARNING: No GPU detected, falling back to CPU (will be very slow)")
-        return "cpu"
-
-
-def train():
+def train() -> SFTTrainer:
     """Run SFT training with LoRA on local hardware."""
     device = get_device()
+    logger.info("Using device: %s", device)
 
     # Load and prepare dataset
     dataset_split, _intents = load_and_prepare_dataset()
     train_dataset = dataset_split["train"]
     eval_dataset = dataset_split["test"]
 
-    print(f"\nLoading tokenizer for {BASE_MODEL}...")
+    logger.info("Loading tokenizer for %s...", BASE_MODEL)
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    print(f"Loading model {BASE_MODEL}...")
+    logger.info("Loading model %s...", BASE_MODEL)
     model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL,
         dtype=torch.float32 if device == "mps" else torch.bfloat16,
@@ -106,7 +93,7 @@ def train():
         report_to="none",
     )
 
-    print("\nInitializing SFT Trainer...")
+    logger.info("Initializing SFT Trainer...")
     trainer = SFTTrainer(
         model=model,
         args=training_args,
@@ -116,23 +103,28 @@ def train():
         processing_class=tokenizer,
     )
 
-    # Print trainable params
+    # Log trainable params
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     total = sum(p.numel() for p in model.parameters())
-    print(f"Trainable parameters: {trainable:,} / {total:,} ({100 * trainable / total:.2f}%)")
+    logger.info(
+        "Trainable parameters: %s / %s (%.2f%%)",
+        f"{trainable:,}",
+        f"{total:,}",
+        100 * trainable / total,
+    )
 
-    print("\nStarting training...")
+    logger.info("Starting training...")
     train_result = trainer.train()
 
-    print(f"\nTraining complete!")
-    print(f"  Total steps: {train_result.global_step}")
-    print(f"  Training loss: {train_result.training_loss:.4f}")
+    logger.info("Training complete!")
+    logger.info("  Total steps: %d", train_result.global_step)
+    logger.info("  Training loss: %.4f", train_result.training_loss)
 
     # Save final adapter
-    print(f"\nSaving LoRA adapter to {ADAPTER_DIR}...")
+    logger.info("Saving LoRA adapter to %s...", ADAPTER_DIR)
     trainer.save_model(str(ADAPTER_DIR))
     tokenizer.save_pretrained(str(ADAPTER_DIR))
-    print("Adapter saved.")
+    logger.info("Adapter saved.")
 
     return trainer
 

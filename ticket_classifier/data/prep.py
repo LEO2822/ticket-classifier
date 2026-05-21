@@ -6,13 +6,30 @@ from collections import Counter
 
 from datasets import load_dataset, DatasetDict
 
-from .config import (
+from ticket_classifier.config import (
+    CONFIDENCE_BASE,
+    CONFIDENCE_HEDGING_PENALTY,
+    CONFIDENCE_LONG_TEXT_BOOST,
+    CONFIDENCE_MAX,
+    CONFIDENCE_MIN,
+    CONFIDENCE_MULTI_KEYWORD_BOOST,
+    CONFIDENCE_QUESTION_PENALTY,
+    CONFIDENCE_SHORT_TEXT_PENALTY,
+    CONFIDENCE_SHORT_WORD_PENALTY,
+    CONFIDENCE_SINGLE_KEYWORD_BOOST,
     DATASET_NAME,
     DATASET_SPLIT,
+    LONG_TEXT_THRESHOLD,
+    REASON_TEXT_TRUNCATE_LENGTH,
+    SEED,
+    SHORT_TEXT_THRESHOLD,
+    SHORT_WORD_RATIO_THRESHOLD,
     SYSTEM_PROMPT,
     TEST_SIZE,
-    SEED,
+    get_logger,
 )
+
+logger = get_logger(__name__)
 
 
 def compute_confidence(instruction: str, intent: str) -> float:
@@ -21,39 +38,48 @@ def compute_confidence(instruction: str, intent: str) -> float:
     words = text.split()
     length = len(words)
 
-    conf = 0.90
+    conf = CONFIDENCE_BASE
 
     # Explicit intent keywords boost confidence
     intent_keywords = intent.replace("_", " ").split()
     keyword_hits = sum(1 for kw in intent_keywords if kw in text)
     if keyword_hits >= 2:
-        conf += 0.06
+        conf += CONFIDENCE_MULTI_KEYWORD_BOOST
     elif keyword_hits >= 1:
-        conf += 0.03
+        conf += CONFIDENCE_SINGLE_KEYWORD_BOOST
 
-    # Longer, more detailed → higher confidence
-    if length > 15:
-        conf += 0.03
-    elif length < 5:
-        conf -= 0.10
+    # Longer, more detailed -> higher confidence
+    if length > LONG_TEXT_THRESHOLD:
+        conf += CONFIDENCE_LONG_TEXT_BOOST
+    elif length < SHORT_TEXT_THRESHOLD:
+        conf -= CONFIDENCE_SHORT_TEXT_PENALTY
 
     # Hedging / uncertainty language
-    hedging = ["maybe", "i think", "possibly", "not sure", "might", "perhaps",
-               "i guess", "kind of", "sort of"]
+    hedging = [
+        "maybe",
+        "i think",
+        "possibly",
+        "not sure",
+        "might",
+        "perhaps",
+        "i guess",
+        "kind of",
+        "sort of",
+    ]
     if any(h in text for h in hedging):
-        conf -= 0.08
+        conf -= CONFIDENCE_HEDGING_PENALTY
 
     # Typos or very informal language (simple proxy: high ratio of short words)
     if length > 3:
         short_ratio = sum(1 for w in words if len(w) <= 2) / length
-        if short_ratio > 0.5:
-            conf -= 0.04
+        if short_ratio > SHORT_WORD_RATIO_THRESHOLD:
+            conf -= CONFIDENCE_SHORT_WORD_PENALTY
 
     # Questions tend to be slightly less explicit
     if text.strip().endswith("?"):
-        conf -= 0.02
+        conf -= CONFIDENCE_QUESTION_PENALTY
 
-    return round(min(max(conf, 0.70), 0.99), 2)
+    return round(min(max(conf, CONFIDENCE_MIN), CONFIDENCE_MAX), 2)
 
 
 def generate_reason(instruction: str, intent: str) -> str:
@@ -61,12 +87,12 @@ def generate_reason(instruction: str, intent: str) -> str:
     readable_intent = intent.replace("_", " ")
     # Clean template placeholders for the reason
     clean_text = re.sub(r"\{\{.*?\}\}", "mentioned entity", instruction)
-    if len(clean_text) > 60:
-        clean_text = clean_text[:57] + "..."
+    if len(clean_text) > REASON_TEXT_TRUNCATE_LENGTH + 3:
+        clean_text = clean_text[:REASON_TEXT_TRUNCATE_LENGTH] + "..."
     return f"Customer request relates to {readable_intent} based on: {clean_text}"
 
 
-def format_example(example: dict, all_intents: list[str]) -> dict:
+def format_example(example: dict[str, str], all_intents: list[str]) -> dict:
     """Convert a raw dataset row into chat-style messages for SFT."""
     instruction = example["instruction"]
     intent = example["intent"]
@@ -93,19 +119,19 @@ def format_example(example: dict, all_intents: list[str]) -> dict:
 
 def load_and_prepare_dataset() -> tuple[DatasetDict, list[str]]:
     """Load dataset, discover intents, format, and split."""
-    print("Loading dataset...")
+    logger.info("Loading dataset...")
     ds = load_dataset(DATASET_NAME, split=DATASET_SPLIT)
-    print(f"Loaded {len(ds)} rows")
+    logger.info("Loaded %d rows", len(ds))
 
     # Discover all intents
     intent_counts = Counter(ds["intent"])
     all_intents = sorted(intent_counts.keys())
-    print(f"Found {len(all_intents)} intents:")
+    logger.info("Found %d intents:", len(all_intents))
     for intent, count in intent_counts.most_common():
-        print(f"  {intent}: {count}")
+        logger.info("  %s: %d", intent, count)
 
     # Format into chat messages
-    print("\nFormatting dataset into chat-style messages...")
+    logger.info("Formatting dataset into chat-style messages...")
     ds_formatted = ds.map(
         lambda ex: format_example(ex, all_intents),
         remove_columns=ds.column_names,
@@ -113,10 +139,14 @@ def load_and_prepare_dataset() -> tuple[DatasetDict, list[str]]:
     )
 
     # Train/eval split
-    print(f"Splitting into train ({1 - TEST_SIZE:.0%}) / eval ({TEST_SIZE:.0%})...")
+    logger.info(
+        "Splitting into train (%.0f%%) / eval (%.0f%%)...",
+        (1 - TEST_SIZE) * 100,
+        TEST_SIZE * 100,
+    )
     split = ds_formatted.train_test_split(test_size=TEST_SIZE, seed=SEED)
-    print(f"  Train: {len(split['train'])} examples")
-    print(f"  Eval:  {len(split['test'])} examples")
+    logger.info("  Train: %d examples", len(split["train"]))
+    logger.info("  Eval:  %d examples", len(split["test"]))
 
     return split, all_intents
 
@@ -125,8 +155,7 @@ if __name__ == "__main__":
     split, intents = load_and_prepare_dataset()
     # Preview one example
     sample = split["train"][0]
-    print("\n── Sample training example ──")
+    logger.info("── Sample training example ──")
     for msg in sample["messages"]:
-        print(f"[{msg['role'].upper()}]")
-        print(msg["content"][:200])
-        print()
+        logger.info("[%s]", msg["role"].upper())
+        logger.info("%s", msg["content"][:200])

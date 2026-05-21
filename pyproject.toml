@@ -1,7 +1,7 @@
 [project]
 name = "ticket-classifier"
 version = "0.1.0"
-description = "Add your description here"
+description = "Fine-tuned Qwen3-0.6B with LoRA/PEFT and TRL SFT for retail-banking ticket intent classification with structured JSON output; trained on Apple Silicon (MPS), exported to GGUF for llama-cpp-python inference."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
