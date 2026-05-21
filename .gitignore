@@ -17,5 +17,6 @@ wheels/
 
 # Models & outputs (large files, not for git)
 models/
-outputs/
+outputs/*
+!outputs/eval_results.json
 llama.cpp/
